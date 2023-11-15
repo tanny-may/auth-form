@@ -3,7 +3,7 @@ import { useState } from "react";
 function App() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	// const [authorized, setAuthorized] = useState(false);
+	const [authorized, setAuthorized] = useState(false);
 
 	function handleEmail(e) {
 		setEmail(e.target.value);
@@ -15,10 +15,29 @@ function App() {
 
 	function handleLogin(e) {
 		e.preventDefault();
-		console.log("button was clicked" + email + password);
+		setAuthorized(true);
+		fetch("login", email, password);
+	}
+
+	function handleLogout(e) {
+		e.preventDefault();
+		setAuthorized(false);
+		fetch("logout", email);
 	}
 
 	const buttonEnabled = checkEmail(email) && checkPassword(password);
+
+	if (authorized) {
+		return (
+			<div>
+				<form>
+					<h2>Hello, {email.split("@")[0]}!</h2>
+					<p>You are authorized</p>
+					<button onClick={handleLogout}>Log Out</button>
+				</form>
+			</div>
+		);
+	}
 
 	return (
 		<div>
@@ -54,6 +73,10 @@ function App() {
 			</form>
 		</div>
 	);
+}
+
+function fetch(...args) {
+	console.log("Fetch with data:", args);
 }
 
 const emailRegexp = /[^\s@]+@[^\s@]+\.[^\s@]+/;
