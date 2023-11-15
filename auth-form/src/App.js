@@ -18,7 +18,7 @@ function App() {
 		console.log("button was clicked" + email + password);
 	}
 
-  const enabled = email.length > 5 && password.length > 5;
+	const buttonEnabled = checkEmail(email) && checkPassword(password);
 
 	return (
 		<div>
@@ -39,21 +39,31 @@ function App() {
 					<input
 						type="password"
 						name="password"
-						placeholder="minimum 6 symbols"
+						placeholder="●●●●●●"
 						value={password}
 						onChange={handlePassword}
 						minLength={6}
 					/>
 				</label>
-				<button 
-          onClick={handleLogin}
-          disabled={!enabled}
-        >
-          Log In
-        </button>
+				<span style={checkPassword(password) ? { display: "none" } : { display: "flex" }}>
+					password must be more than 6 chars and include at least one number
+				</span>
+				<button onClick={handleLogin} disabled={!buttonEnabled}>
+					Log In
+				</button>
 			</form>
 		</div>
 	);
+}
+
+const emailRegexp = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+function checkEmail(email) {
+	return Boolean(email.match(emailRegexp));
+}
+
+const passwordRegexp = /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/;
+function checkPassword(password) {
+	return Boolean(password.match(passwordRegexp));
 }
 
 export default App;
